@@ -6,7 +6,12 @@ import java.util.List;
 
 public class Graph {
 //Constantes:
-	private static double INITIAL_PHEROMONE = 0.1;
+	private static double FEROMONE_INFLUENCE = 1;
+	private static double DISTANCE_INFLUENCE = 1;
+	private static double EVAPORATION = 0.01;
+	private static double INITIAL_FEROMON = 0.1;
+	private static double FEROMONAL_UPDATE = 10;
+
 	
 	
 //Classes dos obejtos do Grafo:
@@ -57,13 +62,13 @@ public class Graph {
 		public Node a;
 		public Node b;
 		public double dist;
-		public double pheromone;
+		public double feromon;
 		
 		public Edge(Node a, Node b, double dist) {
 			this.a = a;
 			this.b = b;
 			this.dist = dist;
-			this.pheromone = INITIAL_PHEROMONE;
+			this.feromon = INITIAL_FEROMON;
 		}
 
 		public Node getA() {
@@ -79,12 +84,12 @@ public class Graph {
 		}
 
 		public double getPheromone() {
-			return pheromone;
+			return feromon;
 		}
 
 		@Override
 		public String toString() {
-			return "Edge [a=" + a + ", b=" + b + ", dist=" + dist + ", pheromone=" + pheromone + "]";
+			return "Edge [a=" + a + ", b=" + b + ", dist=" + dist + ", pheromone=" + feromon + "]";
 		}
 		
 		
