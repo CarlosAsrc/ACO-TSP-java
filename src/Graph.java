@@ -19,12 +19,32 @@ public class Graph {
 		public int d;
 
 		
-		public Node(String nome) {
-			this.nome = nome;
+		public Node(String name) {
+			this.nome = name;
 			this.marca = 0;
 			edges = new ArrayList<Edge>();
 			p = null;
 			d = 0;
+		}
+
+		public String getName() {
+			return nome;
+		}
+
+		public int getMarca() {
+			return marca;
+		}
+
+		public List<Edge> getEdges() {
+			return edges;
+		}
+
+		public Node getP() {
+			return p;
+		}
+
+		public int getD() {
+			return d;
 		}
 
 		public void addEdge(Edge n) {
@@ -45,12 +65,49 @@ public class Graph {
 			this.dist = dist;
 			this.pheromone = INITIAL_PHEROMONE;
 		}
+
+		public Node getA() {
+			return a;
+		}
+
+		public Node getB() {
+			return b;
+		}
+
+		public double getDist() {
+			return dist;
+		}
+
+		public double getPheromone() {
+			return pheromone;
+		}
+
+		@Override
+		public String toString() {
+			return "Edge [a=" + a + ", b=" + b + ", dist=" + dist + ", pheromone=" + pheromone + "]";
+		}
+		
 		
 	}
 	
 	private class Ant {
 		public String name;
 		public Node position;
+		
+		public Ant(String name, Node position) {
+			this.name = name;
+			this.position = position;
+		}
+		
+		public boolean move(Node target) {
+			for(Edge edge: position.edges) {
+				if(target.getName().equals(edge.getA()) || target.getName().equals(edge.getB())) {
+					this.position = target;
+					return true;
+				}				
+			}
+			return false;
+		}
 	}
 	
 	
@@ -59,21 +116,30 @@ public class Graph {
 //Atributos do Grafo
 	private List<Node> nodes;
 	private List<Edge> edges;
+	private List<Ant> ants;
 	
 //Construtor
 	public Graph () {
 		this.nodes = new ArrayList<Node>();
 		this.edges = new ArrayList<Edge>();
+		this.ants = new ArrayList<Ant>();
 	}
 
 //Operações básicas do grafo
 	public void add(String a, String b, double dist) {
 		if(!existNode(a)) {
-			nodes.add(new Node(a));
+			Node newNode = new Node(a);
+			Ant newAnt = new Ant("ant"+ants.size()+1, newNode);
+			ants.add(newAnt);
+			nodes.add(newNode);
 		}
 		if(!existNode(b)) {
-			nodes.add(new Node(b));
+			Node newNode = new Node(b);
+			Ant newAnt = new Ant("ant"+ants.size()+1, newNode);
+			ants.add(newAnt);
+			nodes.add(newNode);
 		}
+		
 		Node nodeA = getNodeByName(a);
 		Node nodeB = getNodeByName(b);
 		Edge edge = new Edge(nodeA, nodeB, dist);
@@ -98,6 +164,12 @@ public class Graph {
 			}
 		}
 		return null;
+	}
+	
+	public void printEdges() {
+		for(Edge edge: edges) {
+			System.out.println(edge.toString());
+		}
 	}
 	
 }
