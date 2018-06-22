@@ -102,6 +102,12 @@ public class Graph {
 		public double getPheromone() {
 			return feromon;
 		}
+		
+		public double getProbability(Node n) {
+			if(this.a.equals(n) && this.a.marca==1) {return this.probabilityPercentageAB;}
+			if(this.b.marca==1) {return this.probabilityPercentageBA;}
+			return -1;
+		}
 
 		@Override
 		public String toString() {
@@ -119,20 +125,18 @@ public class Graph {
 	private class Ant {
 		public String name;
 		public Node position;
+		public List<Node> LastWay;
 		
 		public Ant(String name, Node position) {
 			this.name = name;
 			this.position = position;
+			LastWay = new ArrayList<>();
 		}
 		
-		public boolean move(Node target) {
-			for(Edge edge: position.edges) {
-				if(target.getName().equals(edge.getA()) || target.getName().equals(edge.getB())) {
-					this.position = target;
-					return true;
-				}				
-			}
-			return false;
+		public void move(Edge edge) {
+			if(this.position.equals(edge.a)) {this.position = edge.a;}
+			else {this.position = edge.b;}
+			this.position.marca = 1;
 		}
 	}
 	
@@ -229,8 +233,31 @@ public class Graph {
 		}
 	}
 	
-	public void iteration() {
-		
+	public void markOff() {
+		for(Node node: nodes) {
+			node.marca = 0;
+		}
+	}
+	
+	public void iteration(int iterations) {
+		double higherProbability = 0;
+		double currentProbability = 0;
+		Edge next = null;
+		for(int i=1; i!=iterations; i++) {
+			for(Ant ant: this.ants) {
+				higherProbability = 0;
+				currentProbability = 0;
+				next = null;
+				markOff();
+				for(Edge edge: ant.position.edges) {
+					if(higherProbability > (currentProbability = edge.getProbability(ant.position)) ){ 
+						higherProbability = currentProbability;
+						next = edge;
+					}
+				}
+				ant.move(next);
+			}
+		}
 	}
 	
 	public static Double format(Double n) {
