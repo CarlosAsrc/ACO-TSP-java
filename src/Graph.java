@@ -125,7 +125,7 @@ public class Graph {
 	private class Ant {
 		public String name;
 		public Node position;
-		public List<Node> LastWay;
+		public List<Edge> LastWay;
 		
 		public Ant(String name, Node position) {
 			this.name = name;
@@ -137,6 +137,14 @@ public class Graph {
 			if(this.position.equals(edge.a)) {this.position = edge.a;}
 			else {this.position = edge.b;}
 			this.position.marca = 1;
+		}
+		
+		public double getLastWayDist() {
+			double result = 0;
+			for(Edge edge: LastWay) {
+				result = result + edge.dist;
+			}
+			return result;
 		}
 	}
 	
@@ -248,16 +256,26 @@ public class Graph {
 				higherProbability = 0;
 				currentProbability = 0;
 				next = null;
+				ant.LastWay.clear();
 				markOff();
-				for(Edge edge: ant.position.edges) {
-					if(higherProbability > (currentProbability = edge.getProbability(ant.position)) ){ 
-						higherProbability = currentProbability;
-						next = edge;
+				for(int j=0; j<edges.size(); j++) {
+					for(Edge edge: ant.position.edges) {
+						if(higherProbability > (currentProbability = edge.getProbability(ant.position)) ){ 
+							higherProbability = currentProbability;
+							next = edge;
+						}
 					}
+					ant.move(next);
+					ant.LastWay.add(next);
 				}
-				ant.move(next);
 			}
+			updateFeromon();
 		}
+	}
+	
+	
+	public void updateFeromon() {
+		
 	}
 	
 	public static Double format(Double n) {
