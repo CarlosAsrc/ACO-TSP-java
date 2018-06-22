@@ -18,6 +18,7 @@ public class App {
 		System.out.println("Informe o nome do arquivo:");
 		String arq = in.nextLine();
 		read(arq);
+		graph.printRoutes();
 		graph.printEdges();
 	}
 
@@ -34,7 +35,7 @@ public class App {
 				dist = lineSplitted[2];
 				graph.add(nodeA, nodeB, Double.parseDouble(dist));
 			}
-
+			graph.updateProbabilities();
 		}
 		catch(IOException e) {
 			System.out.println("Arquivo não encontrado!");

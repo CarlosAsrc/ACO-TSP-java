@@ -1,19 +1,13 @@
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class Graph {
-//Constantes:
-	private static double FEROMONE_INFLUENCE = 1;
-	private static double DISTANCE_INFLUENCE = 1;
-	private static double EVAPORATION = 0.01;
-	private static double INITIAL_FEROMON = 0.1;
-	private static double FEROMONAL_UPDATE = 10;
-
-	
-	
 //Classes dos obejtos do Grafo:
 	private class Node {
 
@@ -55,6 +49,14 @@ public class Graph {
 		public void addEdge(Edge n) {
 			this.edges.add(n);
 		}
+		
+		public double getSumInverseDistFeromon() {
+			double result=0;
+			for(Edge edge: edges) {
+				result = result+edge.inverse_distance_feromon;
+			}
+			return result;
+		}
 
 	}
 	
@@ -63,12 +65,26 @@ public class Graph {
 		public Node b;
 		public double dist;
 		public double feromon;
+		public double inverse_distance;
+		public double inverse_distance_feromon;
+		public double probabilityAB;
+		public double probabilityBA;
+		public double probabilityPercentageAB;
+		public double probabilityPercentageBA;
 		
 		public Edge(Node a, Node b, double dist) {
 			this.a = a;
 			this.b = b;
 			this.dist = dist;
 			this.feromon = INITIAL_FEROMON;
+			this.inverse_distance = format(1/dist);
+			this.inverse_distance_feromon = format(this.feromon * this.inverse_distance);
+			this.probabilityAB = 0;
+			this.probabilityBA = 0;
+			this.probabilityPercentageAB = 0;
+			this.probabilityPercentageBA = 0;
+//			this.probabilityAB = this.inverse_distance_feromon / a.getSumInverseDistFeromon();
+//			this.probabilityBA = this.inverse_distance_feromon / b.getSumInverseDistFeromon();
 		}
 
 		public Node getA() {
@@ -89,8 +105,13 @@ public class Graph {
 
 		@Override
 		public String toString() {
-			return "Edge [a=" + a + ", b=" + b + ", dist=" + dist + ", pheromone=" + feromon + "]";
+			return "Edge [a=" + a + ", b=" + b + ", dist=" + dist + ", feromon=" + feromon + ", inverse_distance="
+					+ inverse_distance + ", inverse_distance_feromon=" + inverse_distance_feromon + ", probabilityAB="
+					+ probabilityAB + ", probabilityBA=" + probabilityBA + ", probabilityPercentageAB="
+					+ probabilityPercentageAB + ", probabilityPercentageBA=" + probabilityPercentageBA + "]";
 		}
+
+		
 		
 		
 	}
@@ -118,10 +139,20 @@ public class Graph {
 	
 	
 	
-//Atributos do Grafo
+//Atributos e constantes do Grafo
+	private static DecimalFormat format = new DecimalFormat("#.###");
+	private static double FEROMONE_INFLUENCE = 1;
+	private static double DISTANCE_INFLUENCE = 1;
+	private static double EVAPORATION = 0.01;
+	private static double INITIAL_FEROMON = 0.1;
+	private static double FEROMONAL_UPDATE_COEFFICIENT = 10;
+	
 	private List<Node> nodes;
 	private List<Edge> edges;
 	private List<Ant> ants;
+	
+	
+	
 	
 //Construtor
 	public Graph () {
@@ -175,6 +206,35 @@ public class Graph {
 		for(Edge edge: edges) {
 			System.out.println(edge.toString());
 		}
+	}
+	
+	public void printRoutes() {
+		for(Edge edge: edges) {
+			System.out.println(edge.probabilityAB);
+		}
+		System.out.println("------------------");
+		for(Edge edge: edges) {
+			System.out.println(edge.probabilityBA);
+		}
+	}
+	
+	
+	public void updateProbabilities() {
+		
+		for(Edge edge: edges) {
+			edge.probabilityAB = format(edge.inverse_distance_feromon / edge.a.getSumInverseDistFeromon());
+			edge.probabilityBA = format(edge.inverse_distance_feromon / edge.b.getSumInverseDistFeromon());
+			edge.probabilityPercentageAB = edge.probabilityAB * 100;
+			edge.probabilityPercentageBA = edge.probabilityBA * 100;
+		}
+	}
+	
+	public void iteration() {
+		
+	}
+	
+	public static Double format(Double n) {
+		return Double.valueOf((format.format(n).replaceAll(",", ".")));
 	}
 	
 }
