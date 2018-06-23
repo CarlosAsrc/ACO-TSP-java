@@ -11,7 +11,7 @@ public class Graph {
 //Classes dos obejtos do Grafo:
 	private class Node {
 
-		public String nome;
+		public String name;
 		public int marca;
 		public List<Edge> edges;
 		public Node p;
@@ -19,7 +19,7 @@ public class Graph {
 
 		
 		public Node(String name) {
-			this.nome = name;
+			this.name = name;
 			this.marca = 0;
 			edges = new ArrayList<Edge>();
 			p = null;
@@ -27,7 +27,7 @@ public class Graph {
 		}
 
 		public String getName() {
-			return nome;
+			return name;
 		}
 
 		public int getMarca() {
@@ -60,7 +60,7 @@ public class Graph {
 
 		@Override
 		public String toString() {
-			return "Node [nome=" + nome + ", marca=" + marca + ", edges=" + edges + ", p=" + p + ", d=" + d + "]";
+			return "Node [nome=" + name + ", marca=" + marca + ", p=" + p + ", d=" + d + "]";
 		}
 
 	}
@@ -116,11 +116,10 @@ public class Graph {
 
 		@Override
 		public String toString() {
-			return "Edge [a=" + a.toString() + ", b=" + b.toString() + ", dist=" + dist + ", feromon=" + feromon + ", inverse_distance="
-					+ inverse_distance + ", inverse_distance_feromon=" + inverse_distance_feromon + ", probabilityAB="
-					+ probabilityAB + ", probabilityBA=" + probabilityBA + ", probabilityPercentageAB="
-					+ probabilityPercentageAB + ", probabilityPercentageBA=" + probabilityPercentageBA + "]";
+			return "dist=" + dist;
 		}
+
+		
 
 
 		
@@ -152,6 +151,12 @@ public class Graph {
 			}
 			return result;
 		}
+
+		@Override
+		public String toString() {
+			return "Ant [name=" + name + ", position=" + position + ", LastWay=" + LastWay + "]";
+		}
+		
 	}
 	
 	
@@ -204,7 +209,7 @@ public class Graph {
 
 	public boolean existNode(String name) {
 		for(Node n: nodes) {
-			if(n.nome.equals(name)) {
+			if(n.name.equals(name)) {
 				return true;
 			}
 		}
@@ -213,7 +218,7 @@ public class Graph {
 
 	public Node getNodeByName(String nome) {
 		for(Node n: nodes) {
-			if(n.nome.equals(nome)) {
+			if(n.name.equals(nome)) {
 				return n;
 			}
 		}
@@ -291,6 +296,12 @@ public class Graph {
 					}
 				}
 			}
+		}
+	}
+	
+	public void printAnts() {
+		for(Ant ant: ants) {
+			System.out.println(ant.toString());
 		}
 	}
 	

@@ -19,7 +19,8 @@ public class App {
 		//String arq = in.nextLine();
 		read("case1.txt");
 		graph.iteration(6);
-		graph.printRoutes();
+//		graph.printEdges();
+		graph.printAnts();
 	}
 
 	public static void read(String arq) {
