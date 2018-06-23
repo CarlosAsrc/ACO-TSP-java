@@ -15,11 +15,11 @@ public class App {
 	}
 
 	public static void menu() {
-		System.out.println("Informe o nome do arquivo:");
-		String arq = in.nextLine();
-		read(arq);
+		//System.out.println("Informe o nome do arquivo:");
+		//String arq = in.nextLine();
+		read("case1.txt");
+		graph.iteration(6);
 		graph.printRoutes();
-		graph.printEdges();
 	}
 
 	public static void read(String arq) {

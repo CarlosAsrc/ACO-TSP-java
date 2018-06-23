@@ -58,6 +58,11 @@ public class Graph {
 			return result;
 		}
 
+		@Override
+		public String toString() {
+			return "Node [nome=" + nome + ", marca=" + marca + ", edges=" + edges + ", p=" + p + ", d=" + d + "]";
+		}
+
 	}
 	
 	private class Edge {
@@ -111,11 +116,12 @@ public class Graph {
 
 		@Override
 		public String toString() {
-			return "Edge [a=" + a + ", b=" + b + ", dist=" + dist + ", feromon=" + feromon + ", inverse_distance="
+			return "Edge [a=" + a.toString() + ", b=" + b.toString() + ", dist=" + dist + ", feromon=" + feromon + ", inverse_distance="
 					+ inverse_distance + ", inverse_distance_feromon=" + inverse_distance_feromon + ", probabilityAB="
 					+ probabilityAB + ", probabilityBA=" + probabilityBA + ", probabilityPercentageAB="
 					+ probabilityPercentageAB + ", probabilityPercentageBA=" + probabilityPercentageBA + "]";
 		}
+
 
 		
 		
@@ -232,8 +238,8 @@ public class Graph {
 	
 	
 	public void updateProbabilities() {
-		
 		for(Edge edge: edges) {
+			edge.inverse_distance_feromon = format(edge.feromon * edge.inverse_distance);
 			edge.probabilityAB = format(edge.inverse_distance_feromon / edge.a.getSumInverseDistFeromon());
 			edge.probabilityBA = format(edge.inverse_distance_feromon / edge.b.getSumInverseDistFeromon());
 			edge.probabilityPercentageAB = edge.probabilityAB * 100;
@@ -270,12 +276,22 @@ public class Graph {
 				}
 			}
 			updateFeromon();
+			updateProbabilities();
 		}
 	}
 	
 	
 	public void updateFeromon() {
-		
+		for(Edge edge: edges) {
+			edge.feromon = (1-EVAPORATION) * edge.feromon;
+			for(Ant ant: ants) {
+				for(Edge visitedEdge: ant.LastWay) {
+					if(edge.equals(visitedEdge)) {
+						edge.feromon = edge.feromon + FEROMONAL_UPDATE_COEFFICIENT/ant.getLastWayDist();
+					}
+				}
+			}
+		}
 	}
 	
 	public static Double format(Double n) {
