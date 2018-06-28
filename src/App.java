@@ -15,12 +15,15 @@ public class App {
 	}
 
 	public static void menu() {
-		//System.out.println("Informe o nome do arquivo:");
-		//String arq = in.nextLine();
-		read("case1.txt");
-		graph.iteration(6);
-//		graph.printEdges();
-		graph.printAnts();
+		System.out.println("Informe o nome do arquivo:");
+		String arq = in.nextLine();
+		System.out.println("Informe a quantidade de iterações desejada:");
+		int iterations = in.nextInt();
+		read(arq);
+		graph.iteration(iterations);
+		graph.printAntsLastWays();
+//		graph.printRoutes();
+//		graph.printAnts();
 	}
 
 	public static void read(String arq) {
